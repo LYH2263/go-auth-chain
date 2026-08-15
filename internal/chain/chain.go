@@ -15,11 +15,10 @@ func Default() *Chain {
 
 func (c *Chain) Authenticate(r model.Request) (err error) {
 	for _, h := range c.Handlers {
-		if err := h(r); err != nil { // BUG: := 遮蔽外层 err
-			// 本意返回，却只打日志风格忽略
-			_ = err
+		if err = h(r); err != nil { // 赋值给外层 err，失败即返回
+			return err
 		}
 	}
-	return err // 恒为 nil
+	return err
 }
 
